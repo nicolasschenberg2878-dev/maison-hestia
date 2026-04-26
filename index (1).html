@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maison Hestia - Maison d'hôtes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #f5f5f5 0%, #efefef 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+        
+        section {
+            margin: 3rem 0;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .gallery-card {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        .gallery-card.active {
+            border-color: #1a1a1a;
+        }
+        
+        .gallery-card:hover {
+            border-color: #ccc;
+        }
+        
+        .photo-placeholder {
+            height: 150px;
+            background: #efefef;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        .gallery-card p {
+            margin: 0.5rem 0 0.25rem 0;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .gallery-card p.desc {
+            margin: 0;
+            color: #666;
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+        
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .amenity-card {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .amenity-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .amenity-card p {
+            margin: 0.5rem 0 0.25rem 0;
+            font-weight: 500;
+        }
+        
+        .amenity-card p.small {
+            color: #666;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+        
+        .info-section {
+            padding: 2rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-item p {
+            margin: 0 0 0.5rem 0;
+            font-weight: 500;
+        }
+        
+        .info-item p.value {
+            color: #666;
+            margin: 0;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .rules {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .rules ul {
+            list-style: none;
+            color: #666;
+        }
+        
+        .rules li {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .rules li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .calendar-header button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .calendar-header h3 {
+            margin: 0;
+            text-transform: capitalize;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        .day-header {
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.5rem;
+            color: #666;
+        }
+        
+        .day-cell {
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            background: white;
+        }
+        
+        .day-cell:hover:not(:disabled) {
+            border-color: #999;
+        }
+        
+        .day-cell.selected {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+        }
+        
+        .day-cell.occupied {
+            background: #efefef;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .day-cell.empty {
+            opacity: 0;
+            border: none;
+            cursor: default;
+        }
+        
+        .calendar-legend {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: #666;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .legend-color {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 4px;
+        }
+        
+        .form-section {
+            background: #f9f9f9;
+            padding: 2rem;
+            border-radius: 8px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: white;
+            color: #1a1a1a;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1a1a1a;
+            box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+        }
+        
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .submit-btn {
+            grid-column: 1 / -1;
+            padding: 1rem 2rem;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .submit-btn:hover {
+            background: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            section {
+                margin: 2rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    
+    <script>
+        // État global
+        let state = {
+            currentMonth: new Date(2026, 3),
+            selectedDates: [],
+            currentPhotoIndex: 0,
+            formData: {
+                name: '',
+                email: '',
+                phone: '',
+                checkIn: '',
+                checkOut: '',
+                guests: '',
+                message: ''
+            }
+        };
+        
+        const occupiedDates = [
+            '2026-04-15', '2026-04-16', '2026-04-17',
+            '2026-05-01', '2026-05-02', '2026-05-03', '2026-05-04',
+            '2026-06-10', '2026-06-11', '2026-06-12'
+        ];
+        
+        const photos = [
+            { id: 1, title: 'Chambre principale', desc: 'Vue sur le jardin' },
+            { id: 2, title: 'Salon', desc: 'Espace de vie confortable' },
+            { id: 3, title: 'Cuisine', desc: 'Équipée et spacieuse' },
+            { id: 4, title: 'Jardin', desc: 'Terrasse ensoleillée' },
+            { id: 5, title: 'Salle de bain', desc: 'Moderne et lumineuse' },
+            { id: 6, title: 'Chambre 2', desc: 'Cosy et accueillante' }
+        ];
+        
+        const amenities = [
+            { icon: '📶', name: 'WiFi gratuit', desc: 'Connexion rapide' },
+            { icon: '☕', name: 'Petit-déjeuner', desc: 'Sur demande' },
+            { icon: '🏠', name: 'Cuisine complète', desc: 'À disposition' },
+            { icon: '🌳', name: 'Jardin privé', desc: 'Accès libre' }
+        ];
+        
+        // Fonctions utilitaires
+        function getDaysInMonth(date) {
+            return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+        }
+        
+        function getFirstDayOfMonth(date) {
+            return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+        }
+        
+        function formatDateString(year, month, day) {
+            return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        }
+        
+        function isOccupied(dateStr) {
+            return occupiedDates.includes(dateStr);
+        }
+        
+        function isSelected(dateStr) {
+            return state.selectedDates.includes(dateStr);
+        }
+        
+        // Gestion des événements
+        window.handleDateClick = function(day) {
+            const dateStr = formatDateString(state.currentMonth.getFullYear(), state.currentMonth.getMonth(), day);
+            if (isOccupied(dateStr)) return;
+            
+            const index = state.selectedDates.indexOf(dateStr);
+            if (index > -1) {
+                state.selectedDates.splice(index, 1);
+            } else {
+                state.selectedDates.push(dateStr);
+            }
+            render();
+        };
+        
+        window.handleNextMonth = function() {
+            state.currentMonth = new Date(state.currentMonth.getFullYear(), state.currentMonth.getMonth() + 1);
+            render();
+        };
+        
+        window.handlePrevMonth = function() {
+            state.currentMonth = new Date(state.currentMonth.getFullYear(), state.currentMonth.getMonth() - 1);
+            render();
+        };
+        
+        window.handlePhotoClick = function(idx) {
+            state.currentPhotoIndex = idx;
+            render();
+        };
+        
+        window.handleFormChange = function(name, value) {
+            state.formData[name] = value;
+        };
+        
+        window.handleSubmit = function(e) {
+            e.preventDefault();
+            const { name, email, phone, checkIn, checkOut, guests, message } = state.formData;
+            const mailtoLink = `mailto:contact@maisonhestia.fr?subject=Demande de réservation Maison Hestia&body=Nom: ${name}%0DEmail: ${email}%0DTéléphone: ${phone}%0DArrivée: ${checkIn}%0DDépart: ${checkOut}%0DNombre de personnes: ${guests}%0DMessage: ${encodeURIComponent(message)}`;
+            window.location.href = mailtoLink;
+        };
+        
+        // Fonction de rendu
+        function render() {
+            const daysInMonth = getDaysInMonth(state.currentMonth);
+            const firstDay = getFirstDayOfMonth(state.currentMonth);
+            const days = [];
+            for (let i = 0; i < firstDay; i++) days.push(null);
+            for (let i = 1; i <= daysInMonth; i++) days.push(i);
+            
+            const monthName = state.currentMonth.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
+            
+            let html = `
+                <div style="background: white; min-height: 100vh;">
+                    <!-- Hero Section -->
+                    <div class="hero">
+                        <h1>Maison Hestia</h1>
+                        <p>Votre refuge idéal pour des vacances inoubliables</p>
+                    </div>
+                    
+                    <div class="container">
+                        <!-- Galerie Photo -->
+                        <section>
+                            <h2>Galerie</h2>
+                            <div class="gallery-grid">
+                                ${photos.map((photo, idx) => `
+                                    <div class="gallery-card ${state.currentPhotoIndex === idx ? 'active' : ''}" onclick="handlePhotoClick(${idx})" style="cursor: pointer;">
+                                        <div class="photo-placeholder">Photo ${photo.id}</div>
+                                        <p>${photo.title}</p>
+                                        <p class="desc">${photo.desc}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </section>
+                        
+                        <!-- Commodités -->
+                        <section>
+                            <h2>Commodités</h2>
+                            <div class="amenities-grid">
+                                ${amenities.map((amenity, idx) => `
+                                    <div class="amenity-card">
+                                        <div class="amenity-icon">${amenity.icon}</div>
+                                        <p>${amenity.name}</p>
+                                        <p class="small">${amenity.desc}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </section>
+                        
+                        <!-- Infos pratiques -->
+                        <section class="info-section">
+                            <h2>Infos pratiques</h2>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div>
+                                        <p>Capacité</p>
+                                        <p class="value">4 à 8 personnes</p>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div>
+                                        <p>Localisation</p>
+                                        <p class="value">Nouvelle-Aquitaine</p>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div>
+                                        <p>Tarifs</p>
+                                        <p class="value">Variable selon saison</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rules">
+                                <h3>Règles</h3>
+                                <ul>
+                                    <li>Arrivée à partir de 15h</li>
+                                    <li>Départ avant 11h</li>
+                                    <li>Animaux de compagnie sur demande</li>
+                                    <li>Pas de fêtes</li>
+                                </ul>
+                            </div>
+                        </section>
+                        
+                        <!-- Calendrier -->
+                        <section>
+                            <h2>Disponibilités</h2>
+                            <div>
+                                <div class="calendar-header">
+                                    <button onclick="handlePrevMonth()">←</button>
+                                    <h3>${monthName}</h3>
+                                    <button onclick="handleNextMonth()">→</button>
+                                </div>
+                                
+                                <div class="calendar-grid">
+                                    ${['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map(day => `<div class="day-header">${day}</div>`).join('')}
+                                    ${days.map((day, idx) => {
+                                        if (!day) {
+                                            return '<button class="day-cell empty" disabled></button>';
+                                        }
+                                        const dateStr = formatDateString(state.currentMonth.getFullYear(), state.currentMonth.getMonth(), day);
+                                        const occupied = isOccupied(dateStr);
+                                        const selected = isSelected(dateStr);
+                                        
+                                        let className = 'day-cell';
+                                        if (occupied) className += ' occupied';
+                                        if (selected) className += ' selected';
+                                        
+                                        return `<button class="${className}" onclick="handleDateClick(${day})" ${occupied ? 'disabled' : ''}>${day}</button>`;
+                                    }).join('')}
+                                </div>
+                                
+                                <div class="calendar-legend">
+                                    <div class="legend-item">
+                                        <div class="legend-color" style="background: white; border: 1px solid #e0e0e0;"></div>
+                                        Disponible
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-color" style="background: #1a1a1a;"></div>
+                                        Sélectionné
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-color" style="background: #efefef;"></div>
+                                        Occupé
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Formulaire de réservation -->
+                        <section>
+                            <h2>Demander une réservation</h2>
+                            <form class="form-section" onsubmit="handleSubmit(event)">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Nom complet *</label>
+                                        <input type="text" name="name" value="${state.formData.name}" onchange="handleFormChange('name', this.value)" required />
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Email *</label>
+                                        <input type="email" name="email" value="${state.formData.email}" onchange="handleFormChange('email', this.value)" required />
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Téléphone</label>
+                                        <input type="tel" name="phone" value="${state.formData.phone}" onchange="handleFormChange('phone', this.value)" />
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Arrivée</label>
+                                        <input type="date" name="checkIn" value="${state.formData.checkIn}" onchange="handleFormChange('checkIn', this.value)" />
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Départ</label>
+                                        <input type="date" name="checkOut" value="${state.formData.checkOut}" onchange="handleFormChange('checkOut', this.value)" />
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Nombre de personnes</label>
+                                        <input type="number" name="guests" min="1" max="8" value="${state.formData.guests}" onchange="handleFormChange('guests', this.value)" />
+                                    </div>
+                                    
+                                    <div class="form-group full">
+                                        <label>Message</label>
+                                        <textarea name="message" onchange="handleFormChange('message', this.value)" placeholder="Demandes spéciales, questions...">${state.formData.message}</textarea>
+                                    </div>
+                                    
+                                    <button type="submit" class="submit-btn">
+                                        Envoyer ma demande
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('app').innerHTML = html;
+        }
+        
+        // Initialiser le rendu
+        render();
+    </script>
+</body>
+</html>
